@@ -1,54 +1,64 @@
 CSS_STYLES = """
 <style>
-    /* Google Fonts */
-    @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Playfair+Display:wght@700&display=swap');
-
     :root {
-        --primary-color: #2C3E50;
-        --secondary-color: #18BC9C;
-        --accent-color: #3498DB;
-        --background-light: #F8F9FA;
-        --text-dark: #2C3E50;
-        --text-light: #7F8C8D;
-        --white: #FFFFFF;
+        --primary: #2c3e50;
+        --accent: #18bc9c;
+        --background: #f5f7fa;
+        --text: #34495e;
+        --muted: #7f8c8d;
+        --white: #fff;
+        --shadow: rgba(0,0,0,0.1);
+    }
+
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
     }
 
     body {
-        font-family: 'Roboto', sans-serif;
-        background-color: var(--background-light);
-        color: var(--text-dark);
-        margin: 0;
-        padding: 0;
+        font-family: 'Poppins', sans-serif;
+        background-color: var(--background);
+        color: var(--text);
         line-height: 1.6;
     }
 
     .navbar {
-        background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        background: linear-gradient(135deg, var(--primary), var(--accent));
+        box-shadow: 0 4px 10px var(--shadow);
     }
 
     .navbar-brand {
-        font-family: 'Playfair Display', serif;
-        font-size: 2rem;
+        font-weight: bold;
+        font-size: 1.5rem;
         color: var(--white) !important;
     }
 
     .navbar-nav .nav-link {
         color: var(--white) !important;
         margin: 0 10px;
-        font-weight: 500;
-        transition: color 0.3s ease;
+        transition: 0.3s;
     }
 
     .navbar-nav .nav-link:hover {
-        color: var(--secondary-color) !important;
+        color: var(--accent) !important;
     }
 
     .hero-section {
-        background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+        background: linear-gradient(135deg, var(--accent), var(--primary));
         color: var(--white);
         text-align: center;
         padding: 100px 20px;
+    }
+
+    .profile-photo {
+        width: 180px;
+        height: 180px;
+        border-radius: 50%;
+        border: 4px solid var(--white);
+        box-shadow: 0 8px 25px var(--shadow);
+        object-fit: cover;
+        margin-bottom: 20px;
     }
 
     .hero-title {
@@ -58,88 +68,91 @@ CSS_STYLES = """
     }
 
     .hero-subtitle {
-        font-size: 1.4rem;
-        margin-bottom: 20px;
-        font-weight: 400;
-    }
-
-    .profile-photo {
-        width: 200px;
-        height: 200px;
-        border-radius: 50%;
-        border: 5px solid var(--white);
-        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
-        object-fit: cover;
+        font-size: 1.2rem;
+        opacity: 0.9;
         margin-bottom: 20px;
     }
 
     .section-title {
-        font-family: 'Playfair Display', serif;
-        text-align: center;
-        color: var(--primary-color);
-        font-size: 2.5rem;
+        font-size: 2.2rem;
+        font-weight: 700;
+        color: var(--primary);
         margin-bottom: 40px;
+        text-align: center;
         position: relative;
     }
 
     .section-title::after {
-        content: "";
+        content: '';
         width: 80px;
         height: 4px;
-        background: var(--accent-color);
-        display: block;
-        margin: 10px auto 0;
-        border-radius: 2px;
+        background: var(--accent);
+        position: absolute;
+        bottom: -10px;
+        left: 50%;
+        transform: translateX(-50%);
     }
 
     .card {
         background: var(--white);
-        border-radius: 10px;
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-        transition: transform 0.3s ease;
+        border-radius: 15px;
+        box-shadow: 0 6px 20px var(--shadow);
         padding: 20px;
         margin-bottom: 30px;
+        transition: 0.3s;
     }
 
     .card:hover {
         transform: translateY(-5px);
     }
 
+    .publication-category {
+        background: var(--accent);
+        color: var(--white);
+        padding: 8px 15px;
+        border-radius: 50px;
+        display: inline-block;
+        margin-bottom: 10px;
+        font-weight: 500;
+    }
+
+    .btn-download {
+        background: var(--primary);
+        color: var(--white);
+        padding: 10px 25px;
+        border-radius: 30px;
+        text-transform: uppercase;
+        font-weight: 600;
+        transition: 0.3s;
+        text-decoration: none;
+    }
+
+    .btn-download:hover {
+        background: var(--accent);
+        color: var(--white);
+        text-decoration: none;
+    }
+
     .contact-form {
         background: var(--white);
         padding: 30px;
-        border-radius: 10px;
-        box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+        border-radius: 15px;
+        box-shadow: 0 6px 20px var(--shadow);
     }
 
-    .btn-primary {
-        background: var(--accent-color);
-        border: none;
+    .form-control, .btn-submit {
+        border-radius: 30px;
+    }
+
+    .btn-submit {
+        background: var(--accent);
         color: var(--white);
         font-weight: 600;
-        padding: 10px 25px;
-        border-radius: 25px;
-        transition: background 0.3s ease;
+        transition: 0.3s;
     }
 
-    .btn-primary:hover {
-        background: var(--secondary-color);
-    }
-
-    .footer {
-        background: var(--primary-color);
-        color: var(--white);
-        text-align: center;
-        padding: 40px 0;
-    }
-
-    @media (max-width: 768px) {
-        .hero-title {
-            font-size: 2.2rem;
-        }
-        .hero-subtitle {
-            font-size: 1.2rem;
-        }
+    .btn-submit:hover {
+        background: var(--primary);
     }
 </style>
 """
@@ -147,28 +160,32 @@ CSS_STYLES = """
 JAVASCRIPT = """
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        // Smooth scrolling
-        const links = document.querySelectorAll('a[href^="#"]');
-        links.forEach(link => {
-            link.addEventListener('click', function(e) {
-                e.preventDefault();
-                const target = document.querySelector(this.getAttribute('href'));
-                target.scrollIntoView({ behavior: 'smooth' });
-            });
-        });
-
-        // Contact form
         const form = document.getElementById('contact-form');
         if (form) {
             form.addEventListener('submit', function(e) {
                 e.preventDefault();
+                const formData = new FormData(this);
+                const jsonData = Object.fromEntries(formData);
+
                 fetch('/contact', {
                     method: 'POST',
-                    headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify(Object.fromEntries(new FormData(form)))
-                }).then(r => r.json()).then(data => {
-                    alert(data.success ? 'Message sent successfully!' : 'Failed to send message.');
-                    if(data.success) form.reset();
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(jsonData)
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert('Thank you for your message! I will contact you soon.');
+                        form.reset();
+                    } else {
+                        alert('Error sending message. Please try again later.');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Error sending message. Please try again later.');
                 });
             });
         }
@@ -198,9 +215,9 @@ HTML_TEMPLATE = """
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item"><a class="nav-link" href="#about">About</a></li>
                     <li class="nav-item"><a class="nav-link" href="#research">Research</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#skills">Skills</a></li>
                     <li class="nav-item"><a class="nav-link" href="#publications">Publications</a></li>
                     <li class="nav-item"><a class="nav-link" href="#contact">Contact</a></li>
+                    <li class="nav-item"><a class="btn-download ms-3" href="/cv" target="_blank">Download CV</a></li>
                 </ul>
             </div>
         </div>
@@ -210,84 +227,85 @@ HTML_TEMPLATE = """
         <div class="container">
             <img src="data:image/jpeg;base64,{{ profile_image }}" alt="Profile" class="profile-photo">
             <h1 class="hero-title">Vidyapati Kumar</h1>
-            <p class="hero-subtitle">PhD Candidate | AI & Biomechatronics</p>
-        </div>
-    </section>
-
-    <section id="about" class="py-5">
-        <div class="container">
-            <h2 class="section-title">About Me</h2>
-            <div class="card">
-                <p>I am a PhD candidate in Mechanical Engineering at IIT Kharagpur, specializing in AI-driven biomechatronic systems, prosthetics, and medical AI. My work integrates sensor fusion (EMG, IMU, FSR), embedded platforms, and ML for healthcare applications.</p>
+            <p class="hero-subtitle">PhD Candidate | AI-Driven Biomechatronics & Prosthetics</p>
+            <div class="mt-3">
+                <a href="mailto:vidyapatikumar.me@gmail.com" class="btn-download">Contact Me</a>
             </div>
         </div>
     </section>
 
-    <section id="research" class="py-5 bg-light">
+    <section id="research" class="py-5">
         <div class="container">
             <h2 class="section-title">Research Interests</h2>
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="card">AI in Prosthetics, Biomechatronics, and Wearable Health Technologies.</div>
+            <div class="row text-center">
+                <div class="col-md-4">
+                    <div class="card">
+                        <h5>AI in Healthcare</h5>
+                        <p>Explainable AI models for prosthetic control & medical decision systems.</p>
+                    </div>
                 </div>
-                <div class="col-md-6">
-                    <div class="card">Explainable AI (SHAP, LIME), FEA, and Optimization in Biomedical Devices.</div>
+                <div class="col-md-4">
+                    <div class="card">
+                        <h5>Biomechatronics</h5>
+                        <p>Intelligent prosthetic limbs, wearable sensors, and real-time embedded systems.</p>
+                    </div>
                 </div>
-            </div>
-        </div>
-    </section>
-
-    <section id="skills" class="py-5">
-        <div class="container">
-            <h2 class="section-title">Skills</h2>
-            <div class="row">
-                <div class="col-md-4"><div class="card">Python, MATLAB, Embedded Systems</div></div>
-                <div class="col-md-4"><div class="card">TensorFlow, PyTorch, OpenCV</div></div>
-                <div class="col-md-4"><div class="card">Sensor Fusion, Prosthetic Design, IoT</div></div>
+                <div class="col-md-4">
+                    <div class="card">
+                        <h5>IoT for Assistive Tech</h5>
+                        <p>ESP32 & Raspberry Pi systems for patient-centric healthcare IoT devices.</p>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
 
     <section id="publications" class="py-5 bg-light">
         <div class="container">
-            <h2 class="section-title">Selected Publications</h2>
-            <div class="card">
-                <p>1. Wearable sensor‑based intent recognition for prosthetics - Measurement: Sensors (Elsevier)</p>
-                <p>2. Biomechanical material selection for prosthetics - IJIDeM (Springer)</p>
-                <p>3. Vision Transformer-based gait analysis - IEEE Conference</p>
+            <h2 class="section-title">Publications</h2>
+            {% for theme, papers in publications.items() %}
+            <div class="mb-4">
+                <span class="publication-category">{{ theme }}</span>
+                {% for pub in papers %}
+                <div class="card mt-3">
+                    <h5>{{ pub.title }}</h5>
+                    <p class="mb-1"><strong>{{ pub.journal }}</strong> ({{ pub.year }})</p>
+                    <a href="{{ pub.link }}" target="_blank" class="btn btn-sm btn-outline-primary mt-2">
+                        <i class="fas fa-external-link-alt"></i> View Paper
+                    </a>
+                </div>
+                {% endfor %}
             </div>
+            {% endfor %}
         </div>
     </section>
 
     <section id="contact" class="py-5">
         <div class="container">
             <h2 class="section-title">Contact Me</h2>
-            <div class="contact-form">
-                <form id="contact-form">
-                    <div class="mb-3">
-                        <label for="name" class="form-label">Name</label>
-                        <input type="text" class="form-control" id="name" name="name" required>
+            <div class="row">
+                <div class="col-lg-6 mx-auto">
+                    <div class="contact-form">
+                        <form id="contact-form">
+                            <div class="mb-3">
+                                <input type="text" name="name" class="form-control" placeholder="Your Name" required>
+                            </div>
+                            <div class="mb-3">
+                                <input type="email" name="email" class="form-control" placeholder="Your Email" required>
+                            </div>
+                            <div class="mb-3">
+                                <textarea name="message" rows="5" class="form-control" placeholder="Your Message" required></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-submit w-100">Send Message</button>
+                        </form>
                     </div>
-                    <div class="mb-3">
-                        <label for="email" class="form-label">Email</label>
-                        <input type="email" class="form-control" id="email" name="email" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="subject" class="form-label">Subject</label>
-                        <input type="text" class="form-control" id="subject" name="subject" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="message" class="form-label">Message</label>
-                        <textarea class="form-control" id="message" name="message" rows="5" required></textarea>
-                    </div>
-                    <button type="submit" class="btn btn-primary">Send Message</button>
-                </form>
+                </div>
             </div>
         </div>
     </section>
 
-    <footer class="footer">
-        <p>&copy; 2025 Vidyapati Kumar | IIT Kharagpur</p>
+    <footer class="py-4 text-center">
+        <p>&copy; 2025 Vidyapati Kumar. All Rights Reserved.</p>
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
