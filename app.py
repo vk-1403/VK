@@ -1,6 +1,6 @@
 import os
 import logging
-from flask import Flask, render_template_string, request, jsonify
+from flask import Flask, render_template_string, request, jsonify, send_from_directory
 from flask_mail import Mail, Message
 from my_html_assets import CSS_STYLES, JAVASCRIPT, HTML_TEMPLATE, get_profile_image_base64
 
@@ -56,6 +56,15 @@ def contact():
     except Exception as e:
         logging.error(f"Error processing contact form: {e}")
         return jsonify({'success': False, 'error': 'Failed to send message'}), 500
+
+@app.route('/cv')
+def download_cv():
+    """Serve the CV PDF file"""
+    try:
+        return send_from_directory('static', 'CV_VK_git.pdf', as_attachment=True)
+    except Exception as e:
+        logging.error(f"CV download error: {e}")
+        return "CV not found", 404
 
 @app.errorhandler(404)
 def not_found(error):
