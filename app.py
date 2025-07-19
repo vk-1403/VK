@@ -5,21 +5,22 @@ from datetime import datetime
 import base64
 from flask_mail import Mail, Message
 
-# Configure Flask-Mail
-app.config['MAIL_SERVER'] = 'smtp.gmail.com'  # Or your mail server
+# Create Flask app FIRST
+app = Flask(__name__)
+app.secret_key = os.environ.get("SESSION_SECRET", "your-secret-key-here")
+
+# Configure Flask-Mail AFTER app is created
+app.config['MAIL_SERVER'] = 'smtp.gmail.com'
 app.config['MAIL_PORT'] = 587
 app.config['MAIL_USE_TLS'] = True
 app.config['MAIL_USERNAME'] = 'vidyapatikumar.me@gmail.com'
-app.config['MAIL_PASSWORD'] = os.environ.get('GMAIL_APP_PASSWORD')
-app.config['MAIL_DEFAULT_SENDER'] = 'yourgmail@gmail.com'
+app.config['MAIL_PASSWORD'] = os.environ.get('GMAIL_APP_PASSWORD')  # Secure env var
+app.config['MAIL_DEFAULT_SENDER'] = 'vidyapatikumar.me@gmail.com'
 
 mail = Mail(app)
 
 # Configure logging
 logging.basicConfig(level=logging.DEBUG)
-
-app = Flask(__name__)
-app.secret_key = os.environ.get("SESSION_SECRET", "your-secret-key-here")
 
 # Profile photo (base64 encoded)
 def get_profile_image():
