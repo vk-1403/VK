@@ -3,6 +3,17 @@ import logging
 from flask import Flask, render_template_string, request, jsonify, send_file
 from datetime import datetime
 import base64
+from flask_mail import Mail, Message
+
+# Configure Flask-Mail
+app.config['MAIL_SERVER'] = 'smtp.gmail.com'  # Or your mail server
+app.config['MAIL_PORT'] = 587
+app.config['MAIL_USE_TLS'] = True
+app.config['MAIL_USERNAME'] = 'vidyapatikumar.me@gmail.com'
+app.config['MAIL_PASSWORD'] = os.environ.get('GMAIL_APP_PASSWORD')
+app.config['MAIL_DEFAULT_SENDER'] = 'yourgmail@gmail.com'
+
+mail = Mail(app)
 
 # Configure logging
 logging.basicConfig(level=logging.DEBUG)
@@ -1013,26 +1024,31 @@ def index():
 
 @app.route('/contact', methods=['POST'])
 def contact():
-    """Handle contact form submissions"""
+    """Handle contact form submissions and send email"""
     try:
         data = request.get_json()
-        
-        # Log the contact form submission
-        logging.info(f"Contact form submission from {data.get('name')} ({data.get('email')})")
-        logging.info(f"Subject: {data.get('subject')}")
-        logging.info(f"Message: {data.get('message')}")
-        
-        # In a real application, you would:
-        # 1. Validate the data
-        # 2. Send an email
-        # 3. Store in database
-        # 4. Send confirmation email
-        
-        return jsonify({'success': True, 'message': 'Thank you for your message!'})
-        
+        name = data.get('name')
+        email = data.get('email')
+        subject = data.get('subject')
+        message = data.get('message')
+
+        # Send email
+        msg = Message(subject=f"New Contact Form: {subject}",
+                      recipients=["vidyapatikumar.me@gmail.com"])
+        msg.body = f"""
+        Name: {name}
+        Email: {email}
+        Subject: {subject}
+        Message:
+        {message}
+        """
+        mail.send(msg)
+
+        return jsonify({'success': True, 'message': 'Thank you for your message! I will get back to you soon.'})
     except Exception as e:
         logging.error(f"Error processing contact form: {e}")
         return jsonify({'success': False, 'error': 'Failed to send message'}), 500
+
 
 @app.route('/cv')
 def download_cv():
