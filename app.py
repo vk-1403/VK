@@ -1,149 +1,87 @@
 import os
 import logging
-from flask import Flask, render_template_string, request, jsonify, send_from_directory
+from flask import Flask, render_template, request, jsonify, send_from_directory
 from flask_mail import Mail, Message
-from my_html_assets import (
-    CSS_STYLES,
-    JAVASCRIPT,
-    HTML_TEMPLATE,
-    get_profile_image_base64
-)
+from my_html_assets import get_profile_image_base64, PUBLICATIONS, EDUCATION, EXPERIENCE, SKILLS, AWARDS, PROFILE_SUMMARY
 
-# Create Flask app
+# Initialize Flask
 app = Flask(__name__)
 app.secret_key = os.environ.get("SESSION_SECRET", "super-secret-key")
 
 # Configure Flask-Mail
-app.config['MAIL_SERVER'] = 'smtp.gmail.com'
-app.config['MAIL_PORT'] = 587
-app.config['MAIL_USE_TLS'] = True
-app.config['MAIL_USERNAME'] = 'vidyapatikumar.me@gmail.com'
-app.config['MAIL_PASSWORD'] = os.environ.get('GMAIL_APP_PASSWORD')  # Set this as an env variable
-app.config['MAIL_DEFAULT_SENDER'] = 'vidyapatikumar.me@gmail.com'
-
+app.config.update(
+    MAIL_SERVER='smtp.gmail.com',
+    MAIL_PORT=587,
+    MAIL_USE_TLS=True,
+    MAIL_USERNAME='vidyapatikumar.me@gmail.com',
+    MAIL_PASSWORD=os.environ.get('GMAIL_APP_PASSWORD'),
+    MAIL_DEFAULT_SENDER='vidyapatikumar.me@gmail.com'
+)
 mail = Mail(app)
 
-# Configure logging
-logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
+# Logging
+logging.basicConfig(level=logging.DEBUG)
 
-
-# ---------------------------
-# Theme-wise Publications Data
-# ---------------------------
-def get_publications():
-    return {
-        "AI & Machine Learning": [
-            {
-                "title": "Wearable sensor‑based intent recognition for adaptive control of intelligent ankle‑foot prosthetics",
-                "journal": "Measurement: Sensors, Elsevier (2025)",
-                "year": "2025",
-                "link": "https://doi.org/10.xxxxx/measurement"
-            },
-            {
-                "title": "Vision Transformer-based pose estimation for automated gait analysis in prosthetic design",
-                "journal": "IEEE ICCCT (2024)",
-                "year": "2024",
-                "link": "https://doi.org/10.xxxxx/ieee"
-            }
-        ],
-        "Biomechatronics": [
-            {
-                "title": "Biomechanical material selection for ankle‑foot prosthetics: An ensemble MCDM‑FEA framework",
-                "journal": "Springer IJIDeM (2025)",
-                "year": "2025",
-                "link": "https://doi.org/10.xxxxx/springer"
-            }
-        ],
-        "IoT & Embedded Systems": [
-            {
-                "title": "ESP32-based prosthetic control system with real-time gait phase recognition",
-                "journal": "ACM Transactions (2023)",
-                "year": "2023",
-                "link": "https://doi.org/10.xxxxx/acm"
-            }
-        ]
-    }
-
-
-# ---------------------------
 # Routes
-# ---------------------------
 @app.route('/')
-def index():
-    try:
-        profile_image = get_profile_image_base64()
-        publications = get_publications()
-        return render_template_string(
-            HTML_TEMPLATE,
-            title="Vidyapati Kumar - PhD Candidate | AI & Biomechatronics",
-            css_styles=CSS_STYLES,
-            javascript=JAVASCRIPT,
-            profile_image=profile_image,
-            publications=publications
-        )
-    except Exception as e:
-        logging.error(f"Error rendering homepage: {e}")
-        return "Internal Server Error", 500
+def home():
+    return render_template('home.html', profile_image=get_profile_image_base64())
 
+@app.route('/about')
+def about():
+    return render_template('about.html', summary=PROFILE_SUMMARY)
 
-@app.route('/contact', methods=['POST'])
+@app.route('/education')
+def education():
+    return render_template('education.html', education=EDUCATION)
+
+@app.route('/experience')
+def experience():
+    return render_template('experience.html', experience=EXPERIENCE)
+
+@app.route('/publications')
+def publications():
+    return render_template('publications.html', publications=PUBLICATIONS)
+
+@app.route('/skills')
+def skills():
+    return render_template('skills.html', skills=SKILLS, awards=AWARDS)
+
+@app.route('/contact', methods=['GET', 'POST'])
 def contact():
-    """Handle contact form submissions and send email notifications."""
-    try:
-        data = request.get_json()
-        name = data.get('name')
-        email = data.get('email')
-        subject = data.get('subject', 'Contact Form Submission')
-        message = data.get('message')
+    if request.method == 'POST':
+        try:
+            data = request.get_json()
+            name, email, subject, message = data.get('name'), data.get('email'), data.get('subject'), data.get('message')
 
-        msg = Message(
-            subject=f"New Contact Form: {subject}",
-            recipients=["vidyapatikumar.me@gmail.com"]
-        )
-        msg.body = f"""
-        Name: {name}
-        Email: {email}
-        Subject: {subject}
-        Message:
-        {message}
-        """
-        mail.send(msg)
-
-        logging.info(f"Contact form submitted successfully by {name} ({email})")
-        return jsonify({'success': True, 'message': 'Thank you for your message! I will get back to you soon.'})
-    except Exception as e:
-        logging.error(f"Error processing contact form: {e}")
-        return jsonify({'success': False, 'error': 'Failed to send message'}), 500
-
+            msg = Message(subject=f"Contact Form: {subject}",
+                          recipients=["vidyapatikumar.me@gmail.com"],
+                          body=f"Name: {name}\nEmail: {email}\n\n{message}")
+            mail.send(msg)
+            logging.info(f"Contact form submitted successfully by {name}")
+            return jsonify({'success': True, 'message': 'Thank you! I will get back to you soon.'})
+        except Exception as e:
+            logging.error(f"Error in contact form: {e}")
+            return jsonify({'success': False, 'error': 'Failed to send message'}), 500
+    return render_template('contact.html')
 
 @app.route('/cv')
 def download_cv():
-    """Serve the CV PDF file for download."""
     try:
         return send_from_directory('static', 'CV_VK_git.pdf', as_attachment=True)
     except Exception as e:
-        logging.error(f"CV download error: {e}")
+        logging.error(f"Error serving CV: {e}")
         return "CV not found", 404
 
-
-# ---------------------------
 # Error Handlers
-# ---------------------------
 @app.errorhandler(404)
-def not_found(error):
-    logging.warning(f"404 Error: {error}")
-    return "Page not found", 404
-
+def not_found(e):
+    return render_template('404.html'), 404
 
 @app.errorhandler(500)
-def server_error(error):
-    logging.error(f"500 Error: {error}")
-    return "Internal server error", 500
+def server_error(e):
+    return render_template('500.html'), 500
 
-
-# ---------------------------
-# Main Entry Point
-# ---------------------------
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))
     app.run(host='0.0.0.0', port=port, debug=True)
