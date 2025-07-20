@@ -433,7 +433,7 @@ HTML_TEMPLATE = """
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ title }}</title>
-    <meta name="description" content="Vidyapati Kumar - PhD candidate in Mechanical Engineering at IIT Kharagpur specializing in AI-driven biomechatronic systems and intelligent prosthetics">
+    <meta name="description" content="Vidyapati Kumar - PhD scholar in Mechanical Engineering at IIT Kharagpur specializing in AI-driven biomechatronic systems and intelligent prosthetics">
     <meta name="keywords" content="Vidyapati Kumar, PhD, Mechanical Engineering, AI, Biomechatronics, Prosthetics, Machine Learning, IIT Kharagpur, Postdoc">
     
     <!-- Bootstrap CSS -->
@@ -471,10 +471,10 @@ HTML_TEMPLATE = """
         <div class="container text-center">
             <img src="data:image/jpeg;base64,{{ profile_image }}" alt="Vidyapati Kumar" class="profile-photo">
             <h1 class="hero-title">Vidyapati Kumar</h1>
-            <p class="hero-subtitle">PhD Candidate in Mechanical Engineering</p>
+            <p class="hero-subtitle">PhD Scholar in Mechanical Engineering</p>
             <p class="hero-subtitle">IIT Kharagpur, India • CGPA: 8.5/10</p>
             <p class="hero-description">
-                Ph.D. candidate specializing in AI-driven biomechatronic systems, intelligent prosthetics, and wearable health technologies. 
+                Ph.D. scholar specializing in AI-driven biomechatronic systems, intelligent prosthetics, and wearable health technologies. 
                 My work explores the integration of sensor data, embedded platforms, and machine learning for real-time decision-making in healthcare-related contexts.
                 Currently seeking postdoctoral opportunities in AI-enabled healthcare robotics and biomechanics.
             </p>
@@ -507,7 +507,7 @@ HTML_TEMPLATE = """
                     <div class="card">
                         <div class="card-body p-4">
                             <p class="lead">
-                                I am a Ph.D. candidate in Mechanical Engineering at IIT Kharagpur, currently working on AI-based biomechatronic systems, 
+                                I am a Ph.D. scholar in Mechanical Engineering at IIT Kharagpur, currently working on AI-based biomechatronic systems, 
                                 with a focus on intelligent prosthetics and wearable health applications. My work explores the integration of sensor data, 
                                 embedded platforms, and machine learning for real-time decision-making in healthcare-related contexts.
                             </p>
@@ -970,7 +970,7 @@ HTML_TEMPLATE = """
     <footer class="footer">
         <div class="container text-center">
             <p>&copy; 2025 Vidyapati Kumar. All rights reserved.</p>
-            <p>PhD Candidate in Mechanical Engineering | IIT Kharagpur</p>
+            <p>PhD Scholar in Mechanical Engineering | IIT Kharagpur</p>
             <div class="social-links mt-3">
                 <a href="https://rb.gy/xh4gy" target="_blank">
                     <i class="fas fa-graduation-cap"></i>
@@ -1017,7 +1017,7 @@ def index():
     
     return render_template_string(
         HTML_TEMPLATE,
-        title="Vidyapati Kumar - PhD Candidate | AI & Biomechatronics",
+        title="Vidyapati Kumar - PhD Scholar | AI & Biomechatronics",
         css_styles=CSS_STYLES,
         javascript=JAVASCRIPT,
         profile_image=profile_image
