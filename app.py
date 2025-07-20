@@ -21,16 +21,60 @@ mail = Mail(app)
 # Configure logging
 logging.basicConfig(level=logging.DEBUG)
 
+
+# Theme-wise publications
+def get_publications():
+    return {
+        "AI & Machine Learning": [
+            {
+                "title": "Wearable sensor‑based intent recognition for adaptive control of intelligent ankle‑foot prosthetics",
+                "journal": "Measurement: Sensors, Elsevier (2025)",
+                "year": "2025",
+                "link": "https://doi.org/10.xxxxx/measurement"
+            },
+            {
+                "title": "Vision Transformer-based pose estimation for automated gait analysis in prosthetic design",
+                "journal": "IEEE ICCCT (2024)",
+                "year": "2024",
+                "link": "https://doi.org/10.xxxxx/ieee"
+            }
+        ],
+        "Biomechatronics": [
+            {
+                "title": "Biomechanical material selection for ankle‑foot prosthetics: An ensemble MCDM‑FEA framework",
+                "journal": "Springer IJIDeM (2025)",
+                "year": "2025",
+                "link": "https://doi.org/10.xxxxx/springer"
+            }
+        ],
+        "IoT & Embedded Systems": [
+            {
+                "title": "ESP32-based prosthetic control system with real-time gait phase recognition",
+                "journal": "ACM Transactions (2023)",
+                "year": "2023",
+                "link": "https://doi.org/10.xxxxx/acm"
+            }
+        ]
+    }
+
+
 @app.route('/')
 def index():
-    profile_image = get_profile_image_base64()
-    return render_template_string(
-        HTML_TEMPLATE,
-        title="Vidyapati Kumar - PhD Candidate | AI & Biomechatronics",
-        css_styles=CSS_STYLES,
-        javascript=JAVASCRIPT,
-        profile_image=profile_image
-    )
+    try:
+        profile_image = get_profile_image_base64()
+        publications = get_publications()
+        return render_template_string(
+            HTML_TEMPLATE,
+            title="Vidyapati Kumar - PhD Candidate | AI & Biomechatronics",
+            css_styles=CSS_STYLES,
+            javascript=JAVASCRIPT,
+            profile_image=profile_image,
+            publications=publications
+        )
+    except Exception as e:
+        logging.error(f"Error rendering homepage: {e}")
+        return "Internal Server Error", 500
+
 
 @app.route('/contact', methods=['POST'])
 def contact():
@@ -52,10 +96,12 @@ def contact():
         """
         mail.send(msg)
 
+        logging.info(f"Contact form submitted successfully by {name}")
         return jsonify({'success': True, 'message': 'Thank you for your message! I will get back to you soon.'})
     except Exception as e:
         logging.error(f"Error processing contact form: {e}")
         return jsonify({'success': False, 'error': 'Failed to send message'}), 500
+
 
 @app.route('/cv')
 def download_cv():
@@ -66,14 +112,17 @@ def download_cv():
         logging.error(f"CV download error: {e}")
         return "CV not found", 404
 
+
 @app.errorhandler(404)
 def not_found(error):
     return "Page not found", 404
+
 
 @app.errorhandler(500)
 def server_error(error):
     logging.error(f"Server error: {error}")
     return "Internal server error", 500
+
 
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))
