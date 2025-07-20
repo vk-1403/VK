@@ -2,27 +2,34 @@ import os
 import logging
 from flask import Flask, render_template_string, request, jsonify, send_from_directory
 from flask_mail import Mail, Message
-from my_html_assets import CSS_STYLES, JAVASCRIPT, HTML_TEMPLATE, get_profile_image_base64
+from my_html_assets import (
+    CSS_STYLES,
+    JAVASCRIPT,
+    HTML_TEMPLATE,
+    get_profile_image_base64
+)
 
 # Create Flask app
 app = Flask(__name__)
-app.secret_key = os.environ.get("SESSION_SECRET", "your-secret-key-here")
+app.secret_key = os.environ.get("SESSION_SECRET", "super-secret-key")
 
 # Configure Flask-Mail
 app.config['MAIL_SERVER'] = 'smtp.gmail.com'
 app.config['MAIL_PORT'] = 587
 app.config['MAIL_USE_TLS'] = True
 app.config['MAIL_USERNAME'] = 'vidyapatikumar.me@gmail.com'
-app.config['MAIL_PASSWORD'] = os.environ.get('GMAIL_APP_PASSWORD')  # Secure env var
+app.config['MAIL_PASSWORD'] = os.environ.get('GMAIL_APP_PASSWORD')  # Set this as an env variable
 app.config['MAIL_DEFAULT_SENDER'] = 'vidyapatikumar.me@gmail.com'
 
 mail = Mail(app)
 
 # Configure logging
-logging.basicConfig(level=logging.DEBUG)
+logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
 
 
-# Theme-wise publications
+# ---------------------------
+# Theme-wise Publications Data
+# ---------------------------
 def get_publications():
     return {
         "AI & Machine Learning": [
@@ -58,6 +65,9 @@ def get_publications():
     }
 
 
+# ---------------------------
+# Routes
+# ---------------------------
 @app.route('/')
 def index():
     try:
@@ -78,15 +88,18 @@ def index():
 
 @app.route('/contact', methods=['POST'])
 def contact():
+    """Handle contact form submissions and send email notifications."""
     try:
         data = request.get_json()
         name = data.get('name')
         email = data.get('email')
-        subject = data.get('subject')
+        subject = data.get('subject', 'Contact Form Submission')
         message = data.get('message')
 
-        msg = Message(subject=f"New Contact Form: {subject}",
-                      recipients=["vidyapatikumar.me@gmail.com"])
+        msg = Message(
+            subject=f"New Contact Form: {subject}",
+            recipients=["vidyapatikumar.me@gmail.com"]
+        )
         msg.body = f"""
         Name: {name}
         Email: {email}
@@ -96,7 +109,7 @@ def contact():
         """
         mail.send(msg)
 
-        logging.info(f"Contact form submitted successfully by {name}")
+        logging.info(f"Contact form submitted successfully by {name} ({email})")
         return jsonify({'success': True, 'message': 'Thank you for your message! I will get back to you soon.'})
     except Exception as e:
         logging.error(f"Error processing contact form: {e}")
@@ -105,7 +118,7 @@ def contact():
 
 @app.route('/cv')
 def download_cv():
-    """Serve the CV PDF file"""
+    """Serve the CV PDF file for download."""
     try:
         return send_from_directory('static', 'CV_VK_git.pdf', as_attachment=True)
     except Exception as e:
@@ -113,17 +126,24 @@ def download_cv():
         return "CV not found", 404
 
 
+# ---------------------------
+# Error Handlers
+# ---------------------------
 @app.errorhandler(404)
 def not_found(error):
+    logging.warning(f"404 Error: {error}")
     return "Page not found", 404
 
 
 @app.errorhandler(500)
 def server_error(error):
-    logging.error(f"Server error: {error}")
+    logging.error(f"500 Error: {error}")
     return "Internal server error", 500
 
 
+# ---------------------------
+# Main Entry Point
+# ---------------------------
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))
     app.run(host='0.0.0.0', port=port, debug=True)
