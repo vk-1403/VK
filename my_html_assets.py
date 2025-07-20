@@ -11,7 +11,7 @@ def get_profile_image_base64():
             return base64.b64encode(image_file.read()).decode('utf-8')
     except Exception as e:
         logging.error(f"Error loading profile image: {e}")
-        # Fallback: Minimal VK placeholder as base64 SVG
+        # Fallback placeholder SVG
         placeholder_svg = """
         <svg width="200" height="200" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
             <circle cx="100" cy="100" r="100" fill="#18bc9c"/>
@@ -173,11 +173,25 @@ CSS_STYLES = """
     .btn-submit:hover {
         background: var(--primary);
     }
+
+    .cv-section {
+        margin-top: 50px;
+    }
+
+    .cv-subsection {
+        margin-bottom: 30px;
+    }
+
+    .cv-subsection h3 {
+        color: var(--primary);
+        margin-bottom: 20px;
+        font-weight: 600;
+    }
 </style>
 """
 
 # -------------------------------
-# ⚡ JavaScript for Interactivity
+# ⚡ JavaScript for Contact Form
 # -------------------------------
 JAVASCRIPT = """
 <script>
@@ -214,7 +228,7 @@ JAVASCRIPT = """
 """
 
 # -------------------------------
-# 📄 HTML Template
+# 📄 Full Academic HTML Template
 # -------------------------------
 HTML_TEMPLATE = """
 <!DOCTYPE html>
@@ -236,8 +250,8 @@ HTML_TEMPLATE = """
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
-                    <li class="nav-item"><a class="nav-link" href="#research">Research</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#publications">Publications</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#about">About</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#cv">CV</a></li>
                     <li class="nav-item"><a class="nav-link" href="#contact">Contact</a></li>
                     <li class="nav-item"><a class="btn-download ms-3" href="/cv" target="_blank">Download CV</a></li>
                 </ul>
@@ -253,34 +267,59 @@ HTML_TEMPLATE = """
         </div>
     </section>
 
-    <section id="research" class="py-5">
+    <section id="about" class="py-5">
         <div class="container">
-            <h2 class="section-title">Research Interests</h2>
-            <div class="row text-center">
-                <div class="col-md-4"><div class="card"><h5>AI in Healthcare</h5><p>Explainable AI models for prosthetic control & medical systems.</p></div></div>
-                <div class="col-md-4"><div class="card"><h5>Biomechatronics</h5><p>Intelligent prosthetic limbs, wearable sensors, real-time embedded systems.</p></div></div>
-                <div class="col-md-4"><div class="card"><h5>IoT for Assistive Tech</h5><p>ESP32 & Raspberry Pi systems for patient-centric healthcare IoT devices.</p></div></div>
-            </div>
+            <h2 class="section-title">About Me</h2>
+            <p class="lead">Ph.D. candidate in Mechanical Engineering at IIT Kharagpur, specializing in AI-driven biomechatronic systems, advanced manufacturing, and multi-objective optimization. My research integrates machine learning, sensor fusion, and embedded systems for intelligent prosthetics, wearable health technologies, and process optimization. I have published peer-reviewed journal articles, contributed to edited books, and hold a patent and software copyright. With interdisciplinary expertise spanning biomedical engineering, robotics, and smart manufacturing, I aim to contribute to cutting-edge research in AI-enabled systems and real-world healthcare innovations through a postdoctoral position.</p>
         </div>
     </section>
 
-    <section id="publications" class="py-5 bg-light">
+    <section id="cv" class="py-5 cv-section">
         <div class="container">
-            <h2 class="section-title">Publications</h2>
-            {% for theme, papers in publications.items() %}
-            <div class="mb-4">
-                <span class="publication-category">{{ theme }}</span>
-                {% for pub in papers %}
-                <div class="card mt-3">
-                    <h5>{{ pub.title }}</h5>
-                    <p class="mb-1"><strong>{{ pub.journal }}</strong> ({{ pub.year }})</p>
-                    <a href="{{ pub.link }}" target="_blank" class="btn btn-sm btn-outline-primary mt-2">
-                        <i class="fas fa-external-link-alt"></i> View Paper
-                    </a>
-                </div>
+            <h2 class="section-title">Curriculum Vitae</h2>
+            <div class="cv-subsection">
+                <h3>Education</h3>
+                <ul class="list-group">
+                    <li class="list-group-item">Ph.D. (Mechanical Engineering), IIT Kharagpur, India – Dec 2025 (Expected) – CGPA: 8.5/10</li>
+                    <li class="list-group-item">M.E. (Production Engineering), Jadavpur University, India – 2018 – CGPA: 8.38/10</li>
+                    <li class="list-group-item">B.Tech (Mechanical Engineering), MAKAUT, India – 2016 – CGPA: 9.19/10</li>
+                </ul>
+            </div>
+            
+            <div class="cv-subsection">
+                <h3>Experience</h3>
+                <p>Senior Research Fellow – AI-Enhanced Powered Ankle-Foot Prosthetic System (Jul. 2021 – Present, IIT Kharagpur)</p>
+                <p>Project Mentor – TIH Foundation for IoT and IoE (Feb. 2024 – Present, IIT Bombay & DST)</p>
+                <p>Teaching Assistant – NPTEL Courses (Jan. 2021 – Present, IIT Kharagpur)</p>
+                <p>Faculty – GATE (Mechanical) (Aug. 2020 – Dec. 2020, Unacademy)</p>
+            </div>
+
+            <div class="cv-subsection">
+                <h3>Selected Publications & Patents</h3>
+                {% for theme, papers in publications.items() %}
+                <h5>{{ theme }}</h5>
+                <ul>
+                    {% for pub in papers %}
+                    <li><strong>{{ pub.title }}</strong> – {{ pub.journal }} (<a href="{{ pub.link }}" target="_blank">Link</a>)</li>
+                    {% endfor %}
+                </ul>
                 {% endfor %}
             </div>
-            {% endfor %}
+
+            <div class="cv-subsection">
+                <h3>Books & Chapters</h3>
+                <p>See full list in CV or <a href="/cv" target="_blank">Download CV</a></p>
+            </div>
+
+            <div class="cv-subsection">
+                <h3>Technical Skills</h3>
+                <p>Python, MATLAB, Embedded Systems, AI/ML (PyTorch, TensorFlow), FEA, Computer Vision, IoT Devices</p>
+            </div>
+
+            <div class="cv-subsection">
+                <h3>Awards & Certifications</h3>
+                <p>RAAIBA-2022 Workshop, GATE Fellowship (2016–2018), Stanford ML (Coursera)</p>
+            </div>
         </div>
     </section>
 
