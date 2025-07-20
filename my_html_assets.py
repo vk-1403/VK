@@ -1,3 +1,22 @@
+import base64
+import logging
+
+def get_profile_image_base64():
+    """Load and encode the profile image from static folder"""
+    try:
+        with open("static/mypic/VK.png", "rb") as image_file:
+            return base64.b64encode(image_file.read()).decode('utf-8')
+    except Exception as e:
+        logging.error(f"Error loading profile image: {e}")
+        placeholder_svg = """
+        <svg width="200" height="200" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="100" cy="100" r="100" fill="#18bc9c"/>
+            <text x="50%" y="55%" font-size="50" text-anchor="middle" fill="#fff">VK</text>
+        </svg>
+        """
+        return base64.b64encode(placeholder_svg.encode()).decode('utf-8')
+
+# 🌟 Modern, elegant CSS
 CSS_STYLES = """
 <style>
     :root {
@@ -8,12 +27,6 @@ CSS_STYLES = """
         --muted: #7f8c8d;
         --white: #fff;
         --shadow: rgba(0,0,0,0.1);
-    }
-
-    * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
     }
 
     body {
@@ -73,6 +86,23 @@ CSS_STYLES = """
         margin-bottom: 20px;
     }
 
+    .btn-download {
+        background: var(--primary);
+        color: var(--white);
+        padding: 10px 25px;
+        border-radius: 30px;
+        text-transform: uppercase;
+        font-weight: 600;
+        transition: 0.3s;
+        text-decoration: none;
+    }
+
+    .btn-download:hover {
+        background: var(--accent);
+        color: var(--white);
+        text-decoration: none;
+    }
+
     .section-title {
         font-size: 2.2rem;
         font-weight: 700;
@@ -116,23 +146,6 @@ CSS_STYLES = """
         font-weight: 500;
     }
 
-    .btn-download {
-        background: var(--primary);
-        color: var(--white);
-        padding: 10px 25px;
-        border-radius: 30px;
-        text-transform: uppercase;
-        font-weight: 600;
-        transition: 0.3s;
-        text-decoration: none;
-    }
-
-    .btn-download:hover {
-        background: var(--accent);
-        color: var(--white);
-        text-decoration: none;
-    }
-
     .contact-form {
         background: var(--white);
         padding: 30px;
@@ -157,6 +170,7 @@ CSS_STYLES = """
 </style>
 """
 
+# ⚡ JavaScript for smooth scroll & contact form
 JAVASCRIPT = """
 <script>
     document.addEventListener('DOMContentLoaded', function() {
@@ -169,23 +183,21 @@ JAVASCRIPT = """
 
                 fetch('/contact', {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
+                    headers: {'Content-Type': 'application/json'},
                     body: JSON.stringify(jsonData)
                 })
                 .then(response => response.json())
                 .then(data => {
                     if (data.success) {
-                        alert('Thank you for your message! I will contact you soon.');
+                        alert('Thank you! Your message has been sent.');
                         form.reset();
                     } else {
-                        alert('Error sending message. Please try again later.');
+                        alert('Error sending message. Try again later.');
                     }
                 })
                 .catch(error => {
                     console.error('Error:', error);
-                    alert('Error sending message. Please try again later.');
+                    alert('Error sending message. Try again later.');
                 });
             });
         }
@@ -193,6 +205,7 @@ JAVASCRIPT = """
 </script>
 """
 
+# 📄 HTML Template with theme-wise publications & CV download
 HTML_TEMPLATE = """
 <!DOCTYPE html>
 <html lang="en">
@@ -213,7 +226,6 @@ HTML_TEMPLATE = """
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
-                    <li class="nav-item"><a class="nav-link" href="#about">About</a></li>
                     <li class="nav-item"><a class="nav-link" href="#research">Research</a></li>
                     <li class="nav-item"><a class="nav-link" href="#publications">Publications</a></li>
                     <li class="nav-item"><a class="nav-link" href="#contact">Contact</a></li>
@@ -228,9 +240,6 @@ HTML_TEMPLATE = """
             <img src="data:image/jpeg;base64,{{ profile_image }}" alt="Profile" class="profile-photo">
             <h1 class="hero-title">Vidyapati Kumar</h1>
             <p class="hero-subtitle">PhD Candidate | AI-Driven Biomechatronics & Prosthetics</p>
-            <div class="mt-3">
-                <a href="mailto:vidyapatikumar.me@gmail.com" class="btn-download">Contact Me</a>
-            </div>
         </div>
     </section>
 
@@ -238,24 +247,9 @@ HTML_TEMPLATE = """
         <div class="container">
             <h2 class="section-title">Research Interests</h2>
             <div class="row text-center">
-                <div class="col-md-4">
-                    <div class="card">
-                        <h5>AI in Healthcare</h5>
-                        <p>Explainable AI models for prosthetic control & medical decision systems.</p>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="card">
-                        <h5>Biomechatronics</h5>
-                        <p>Intelligent prosthetic limbs, wearable sensors, and real-time embedded systems.</p>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="card">
-                        <h5>IoT for Assistive Tech</h5>
-                        <p>ESP32 & Raspberry Pi systems for patient-centric healthcare IoT devices.</p>
-                    </div>
-                </div>
+                <div class="col-md-4"><div class="card"><h5>AI in Healthcare</h5><p>Explainable AI models for prosthetic control & medical systems.</p></div></div>
+                <div class="col-md-4"><div class="card"><h5>Biomechatronics</h5><p>Intelligent prosthetic limbs, wearable sensors, real-time embedded systems.</p></div></div>
+                <div class="col-md-4"><div class="card"><h5>IoT for Assistive Tech</h5><p>ESP32 & Raspberry Pi systems for patient-centric healthcare IoT devices.</p></div></div>
             </div>
         </div>
     </section>
