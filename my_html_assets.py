@@ -1,6 +1,9 @@
 import base64
 import logging
 
+# -------------------------------
+# Encode profile image or fallback
+# -------------------------------
 def get_profile_image_base64():
     """Load and encode the profile image from static folder"""
     try:
@@ -8,6 +11,7 @@ def get_profile_image_base64():
             return base64.b64encode(image_file.read()).decode('utf-8')
     except Exception as e:
         logging.error(f"Error loading profile image: {e}")
+        # Fallback: Minimal VK placeholder as base64 SVG
         placeholder_svg = """
         <svg width="200" height="200" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
             <circle cx="100" cy="100" r="100" fill="#18bc9c"/>
@@ -16,7 +20,9 @@ def get_profile_image_base64():
         """
         return base64.b64encode(placeholder_svg.encode()).decode('utf-8')
 
-# 🌟 Modern, elegant CSS
+# -------------------------------
+# 🌟 Modern Aesthetic CSS
+# -------------------------------
 CSS_STYLES = """
 <style>
     :root {
@@ -170,7 +176,9 @@ CSS_STYLES = """
 </style>
 """
 
-# ⚡ JavaScript for smooth scroll & contact form
+# -------------------------------
+# ⚡ JavaScript for Interactivity
+# -------------------------------
 JAVASCRIPT = """
 <script>
     document.addEventListener('DOMContentLoaded', function() {
@@ -205,7 +213,9 @@ JAVASCRIPT = """
 </script>
 """
 
-# 📄 HTML Template with theme-wise publications & CV download
+# -------------------------------
+# 📄 HTML Template
+# -------------------------------
 HTML_TEMPLATE = """
 <!DOCTYPE html>
 <html lang="en">
