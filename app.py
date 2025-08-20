@@ -216,12 +216,6 @@ PUBLICATIONS = {
         {"title": "Vision Transformer‑based pose estimation for automated gait analysis in ankle‑foot prosthetic design", "venue": "IEEE InCACCT 2024", "year": 2024, "authors": "V. Kumar; D. K. Pratihar", "link": "https://ieeexplore.ieee.org/document/10551002", "notes": "RTM Pose: MAE 19.75; R² 99.5%; 107.7 ms"},
         {"title": "Terrain recognition for intelligent powered ankle‑foot prosthetics using sEMG and ensemble learning", "venue": "IEEE INDICON 2024", "year": 2024, "authors": "V. Kumar; M. V. Hrishikesh; M. Shijas; D. K. Pratihar", "link": "https://ieeexplore.ieee.org/document/10958532?reason=concurrency", "notes": "Extra Trees 87% acc; F1=0.88"}
     ],
-    "book_chapters": [
-        {"title": "Comparative evaluation of deep learning techniques for multistage Alzheimer’s prediction from MRI", "venue": "in Biomedical Robots and Devices in Healthcare (Elsevier)", "year": 2025, "authors": "P. Gupta; P. Nahak; V. Kumar; D. K. Pratihar; K. Deb", "link": "https://www.sciencedirect.com/science/article/pii/B9780443222061000073"},
-        {"title": "Advancing ankle–foot orthosis design through biomechanics, robotics, and additive manufacturing: A review", "venue": "in Biomedical Robots and Devices in Healthcare (    ],
-    "book_chapters": [
-        # {"title": "Chapter Title", "venue": "Book / Publisher", "year": 2023, "authors": "...", "link": "https://..."},
-    ],
 }
 
 BOOKS = [
@@ -591,4 +585,5 @@ def se(e):
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
     app.run(host="0.0.0.0", port=port, debug=True)
+
 
