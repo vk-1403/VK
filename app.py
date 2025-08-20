@@ -1,21 +1,21 @@
-# app.py — VK personal site (drop‑in upgrade)
+# app.py — VK personal site (drop-in upgrade)
 # -------------------------------------------------
 # Highlights
-# - Adds rich "Publications" with sub‑tabs (Journals / Conferences / Book Chapters)
-# - Adds "Books & Editorial" grid with cover images + links
-# - Adds Awards, Teaching, Mentoring, Talks sections (easy to edit in DATA below)
+# - Rich "Publications" with sub-tabs (Journals / Conferences / Book Chapters)
+# - "Books & Editorial" grid with cover images + links
+# - Awards, Mentoring, Talks sections
 # - CV download endpoint serving /static/cv/Vidyapati_Kumar_CV.pdf if present
-# - Safer email config (env vars), honeypot anti‑spam field
-# - JSON‑LD schema.org for better Google Scholar/SEO
-# - All content is editable in the DATA section
-# - Single‑file Flask app; no templates directory required
+# - Safer email config (env vars), honeypot anti-spam field
+# - JSON-LD schema.org for better SEO
+# - Toast notification on contact form (no raw JSON on page)
+# - Single-file Flask app; no templates directory required
 
 import os
 import json
 import base64
 import logging
 from datetime import datetime
-from flask import Flask, render_template_string, request, jsonify, send_file
+from flask import Flask, render_template_string, request, jsonify, send_file, url_for
 from flask_mail import Mail, Message
 
 # ------------------------------
@@ -38,7 +38,6 @@ logging.basicConfig(level=logging.INFO)
 # ------------------------------
 # Helpers
 # ------------------------------
-
 def b64_image(path: str) -> str:
     try:
         with open(path, "rb") as f:
@@ -63,7 +62,6 @@ PROFILE_IMG_B64 = b64_image("static/mypic/VK.png")
 # ------------------------------
 # ====== DATA (edit freely) =====
 # ------------------------------
-
 BIO = {
     "full_name": "Vidyapati Kumar",
     "tagline": "PhD Scholar • AI & Biomechatronics",
@@ -163,6 +161,9 @@ AWARDS = [
     "Best Paper/Presentation — (add details)",
 ]
 
+MENTORING = [
+    "Srinjoy — Terrain geometry estimation with RPLiDAR + Raspberry Pi for adaptive prosthetic control",
+]
 
 TALKS = [
     {"title": "Vision Transformers for Automated Gait Analysis", "venue": "InCACCT 2024", "link": "https://ieeexplore.ieee.org/document/10551002"},
@@ -170,25 +171,25 @@ TALKS = [
 
 PATENTS = [
     {
-        "title": "A Compact and Powered Ankle‑Foot Prosthetic Device",
+        "title": "A Compact and Powered Ankle-Foot Prosthetic Device",
         "meta": "Indian Patent Application No. 202431037184 (Published & Under Examination)",
         "year": "2024",
         "inst": "IIT Kharagpur",
         "bullets": [
-            "Real‑time foot height & ankle angle adjustments",
-            "Spring‑loaded split forefoot for shock absorption & push‑off",
+            "Real-time foot height & ankle angle adjustments",
+            "Spring-loaded split forefoot for shock absorption & push-off",
             "Hybrid actuation (active + passive) for stability and mobility",
         ],
         "link": "https://drive.google.com/drive/u/7/folders/1AYkEL0NrkHq8G8woTFXXk5bVwJaTIVLk"
     },
     {
-        "title": "ProsthetiX‑AI — Clinical Decision Support for Ankle‑Foot Prosthetics",
+        "title": "ProsthetiX-AI — Clinical Decision Support for Ankle-Foot Prosthetics",
         "meta": "Indian Copyright Application No. 9678/2025-CO/SW",
         "year": "2025",
         "inst": "IIT Kharagpur",
         "bullets": [
-            "LLM + LangChain + Streamlit with explainable AI & K‑level logic",
-            "Real‑time citation justification for clinical use",
+            "LLM + LangChain + Streamlit with explainable AI & K-level logic",
+            "Real-time citation justification for clinical use",
         ],
         "link": "https://drive.google.com/drive/u/7/folders/1AYkEL0NrkHq8G8woTFXXk5bVwJaTIVLk"
     },
@@ -196,57 +197,61 @@ PATENTS = [
 
 PUBLICATIONS = {
     "journals": [
-        {"title": "Wearable sensor‑based intent recognition for adaptive control of intelligent ankle‑foot prosthetics", "venue": "Measurement: Sensors, 39, 101865 (Elsevier)", "year": 2025, "authors": "V. Kumar; D. K. Pratihar", "link": "https://www.sciencedirect.com/science/article/pii/S2665917425000595", "notes": "FSR + accelerometer; SBLSTM 96.3% acc.; 25 ms"},
-        {"title": "Biomechanical material selection for ankle‑foot prosthetics: An ensemble MCDM‑FEA framework", "venue": "International Journal on Interactive Design and Manufacturing (Springer)", "year": 2025, "authors": "V. Kumar; D. K. Pratihar", "link": "https://link.springer.com/article/10.1007/s12008-025-02340-4"},
-        {"title": "Mechatronic and AI‑driven framework for non‑invasive screening of knee abnormalities using multimodal sensors", "venue": "Computer Methods in Biomechanics and Biomedical Engineering", "year": 2024, "authors": "V. Kumar; M. V. Hrishikesh; M. Shijas; D. K. Pratihar", "link": "", "notes": "Accepted"},
-        {"title": "Fuzzy logic‑based synchronization of trajectory planning and obstacle avoidance for RRP SCARA robot", "venue": "IJIDeM", "year": 2025, "authors": "V. Kumar; A. Mistri", "link": "https://link.springer.com/article/10.1007/s12008-024-02214-1"},
-        {"title": "A SWARA‑CoCoSo‑based approach for spray painting robot selection", "venue": "Informatica 33(1) 35–54", "year": 2022, "authors": "V. Kumar; K. Kalita; P. Chatterjee; E. K. Zavadskas; S. Chakraborty", "link": "https://informatica.vu.lt/journal/INFORMATICA/article/1237/info"},
-        {"title": "Teaching‑learning‑based parametric optimization of EDM", "venue": "Facta Universitatis: Mechanical Engineering 18(2) 281–300", "year": 2020, "authors": "V. Kumar; S. Diyaley; S. Chakraborty", "link": "https://casopisi.junis.ni.ac.rs/index.php/FUMechEng/article/view/6156/0"},
-        {"title": "Grey‑fuzzy method‑based parametric analysis of AWJM on GFRP", "venue": "Sādhanā 45(1) 1–18", "year": 2020, "authors": "V. Kumar; P. P. Das; S. Chakraborty", "link": "https://link.springer.com/article/10.1007/s12046-020-01355-9"},
-        {"title": "Machine learning prediction of erosion resistance of laser‑clad coatings", "venue": "Journal of Micromanufacturing", "year": 2025, "authors": "I. Mandal; V. Kumar; P. Saha", "link": "https://journals.sagepub.com/doi/full/10.1177/25165984251317028"},
+        {"title": "Wearable sensor-based intent recognition for adaptive control of intelligent ankle-foot prosthetics", "venue": "Measurement: Sensors, 39, 101865 (Elsevier)", "year": 2025, "authors": "V. Kumar; D. K. Pratihar", "link": "https://www.sciencedirect.com/science/article/pii/S2665917425000595", "notes": "FSR + accelerometer; SBLSTM 96.3% acc.; 25 ms"},
+        {"title": "Biomechanical material selection for ankle-foot prosthetics: An ensemble MCDM-FEA framework", "venue": "International Journal on Interactive Design and Manufacturing (Springer)", "year": 2025, "authors": "V. Kumar; D. K. Pratihar", "link": "https://link.springer.com/article/10.1007/s12008-025-02340-4"},
+        {"title": "Mechatronic and AI-driven framework for non-invasive screening of knee abnormalities using multimodal sensors", "venue": "Computer Methods in Biomechanics and Biomedical Engineering", "year": 2024, "authors": "V. Kumar; M. V. Hrishikesh; M. Shijas; D. K. Pratihar", "link": "", "notes": "Accepted"},
+        {"title": "Fuzzy logic-based synchronization of trajectory planning and obstacle avoidance for RRP SCARA robot", "venue": "IJIDeM", "year": 2025, "authors": "V. Kumar; A. Mistri", "link": "https://link.springer.com/article/10.1007/s12008-024-02214-1"},
+        {"title": "A SWARA-CoCoSo-based approach for spray painting robot selection", "venue": "Informatica 33(1) 35–54", "year": 2022, "authors": "V. Kumar; K. Kalita; P. Chatterjee; E. K. Zavadskas; S. Chakraborty", "link": "https://informatica.vu.lt/journal/INFORMATICA/article/1237/info"},
+        {"title": "Teaching-learning-based parametric optimization of EDM", "venue": "Facta Universitatis: Mechanical Engineering 18(2) 281–300", "year": 2020, "authors": "V. Kumar; S. Diyaley; S. Chakraborty", "link": "https://casopisi.junis.ni.ac.rs/index.php/FUMechEng/article/view/6156/0"},
+        {"title": "Grey-fuzzy method-based parametric analysis of AWJM on GFRP", "venue": "Sādhanā 45(1) 1–18", "year": 2020, "authors": "V. Kumar; P. P. Das; S. Chakraborty", "link": "https://link.springer.com/article/10.1007/s12046-020-01355-9"},
+        {"title": "Machine learning prediction of erosion resistance of laser-clad coatings", "venue": "Journal of Micromanufacturing", "year": 2025, "authors": "I. Mandal; V. Kumar; P. Saha", "link": "https://journals.sagepub.com/doi/full/10.1177/25165984251317028"},
         {"title": "Optimizing healthcare in the digital era: Fusion of IoT with other techniques", "venue": "EAI Endorsed Transactions on Internet of Things, 11", "year": 2025, "authors": "R. Singh; A. Chaudhary; V. Kumar", "link": "https://publications.eai.eu/index.php/IoT/article/view/6077"},
         {"title": "Heat checking as a failure mechanism of dies exposed to thermal cycles: A review", "venue": "Journal of Materials Research and Technology 26", "year": 2023, "authors": "P. Solgi; M. Chenarani; A. R. Eivani; M. Ghosh; V. Kumar; H. R. Jafarian", "link": "https://www.sciencedirect.com/science/article/pii/S223878542301699X"},
-        {"title": "Experimental investigation and optimization of EDM parameters using grey‑fuzzy hybrids", "venue": "Materials 14(19)", "year": 2021, "authors": "A. Sharma; V. Kumar; et al.", "link": "https://www.mdpi.com/1996-1944/14/19/5820"},
+        {"title": "Experimental investigation and optimization of EDM parameters using grey-fuzzy hybrids", "venue": "Materials 14(19)", "year": 2021, "authors": "A. Sharma; V. Kumar; et al.", "link": "https://www.mdpi.com/1996-1944/14/19/5820"},
         {"title": "Functionally graded adherents on failure of FRP socket joints", "venue": "Materials 14(21)", "year": 2021, "authors": "C. Prakash; V. Kumar; et al.", "link": "https://www.mdpi.com/1996-1944/14/21/6365"},
         {"title": "Intelligent decision model for NTM processes", "venue": "DMAME 4(1) 194–214", "year": 2021, "authors": "S. Chakraborty; V. Kumar", "link": "https://dmame-journal.org/index.php/dmame/article/view/154"},
-        {"title": "All‑time best World XI Test cricket team using TOPSIS", "venue": "Decision Science Letters 8(1) 95–108", "year": 2018, "authors": "S. Chakraborty; V. Kumar; K. R. Ramakrishnan", "link": "https://growingscience.com/beta/dsl/2817-selection-of-the-all-time-best-world-xi-test-cricket-team-using-the-topsis-method.html"},
+        {"title": "All-time best World XI Test cricket team using TOPSIS", "venue": "Decision Science Letters 8(1) 95–108", "year": 2018, "authors": "S. Chakraborty; V. Kumar; K. R. Ramakrishnan", "link": "https://growingscience.com/beta/dsl/2817-selection-of-the-all-time-best-world-xi-test-cricket-team-using-the-topsis-method.html"},
         {"title": "Grey fuzzy logic approach for cotton fibre selection", "venue": "IEI Series E 98(1) 1–9", "year": 2017, "authors": "S. Chakraborty; P. P. Das; V. Kumar", "link": "https://link.springer.com/article/10.1007/s40034-017-0099-7"}
     ],
     "conferences": [
-        {"title": "Vision Transformer‑based pose estimation for automated gait analysis in ankle‑foot prosthetic design", "venue": "IEEE InCACCT 2024", "year": 2024, "authors": "V. Kumar; D. K. Pratihar", "link": "https://ieeexplore.ieee.org/document/10551002", "notes": "RTM Pose: MAE 19.75; R² 99.5%; 107.7 ms"},
-        {"title": "Terrain recognition for intelligent powered ankle‑foot prosthetics using sEMG and ensemble learning", "venue": "IEEE INDICON 2024", "year": 2024, "authors": "V. Kumar; M. V. Hrishikesh; M. Shijas; D. K. Pratihar", "link": "https://ieeexplore.ieee.org/document/10958532?reason=concurrency", "notes": "Extra Trees 87% acc; F1=0.88"}
+        {"title": "Vision Transformer-based pose estimation for automated gait analysis in ankle-foot prosthetic design", "venue": "IEEE InCACCT 2024", "year": 2024, "authors": "V. Kumar; D. K. Pratihar", "link": "https://ieeexplore.ieee.org/document/10551002", "notes": "RTM Pose: MAE 19.75; R² 99.5%; 107.7 ms"},
+        {"title": "Terrain recognition for intelligent powered ankle-foot prosthetics using sEMG and ensemble learning", "venue": "IEEE INDICON 2024", "year": 2024, "authors": "V. Kumar; M. V. Hrishikesh; M. Shijas; D. K. Pratihar", "link": "https://ieeexplore.ieee.org/document/10958532?reason=concurrency", "notes": "Extra Trees 87% acc; F1=0.88"}
+    ],
+    "book_chapters": [
+        # Add chapter entries here if you want them listed under the Book Chapters tab
     ],
 }
 
 BOOKS = [
-{
-"title": "Biomedical Robots and Devices in Healthcare: Opportunities and Challenges for Future Applications",
-"authors": "Iqbal, F., Gupta, P., Kumar, V., Pratihar, D. K.",
-"year": "2024",
-"publisher": "Elsevier Science & Technology",
-"link": "https://www.sciencedirect.com/book/9780443222061/biomedical-robots-and-devices-in-healthcare",
-"cover": "static/mypic/book1.jpg",
-},
-{
-"title": "Advancing Healthcare Through Decision Intelligence: Machine Learning, Robotics, and Analytics in Biomedical Informatics",
-"authors": "Dey, S., Kumar, V., Pratihar, D. K., Singh, V. P., Islam, S. M. N.",
-"year": "2025",
-"publisher": "Academic Press (Elsevier)",
-"link": "https://www.sciencedirect.com/book/9780443264801/advancing-healthcare-through-decision-intelligence",
-"cover": "static/mypic/book2.jpg",
-},
-{
-"title": "Quantum Computing, Cyber Security and Cryptography",
-"authors": "Goyal, S. B., Kumar, V., Islam, S. M. N., Ghai, D.",
-"year": "2025",
-"publisher": "Springer",
-"link": "https://link.springer.com/book/10.1007/978-981-96-4948-8",
-"cover": "static/mypic/book3.jpg",
-},
+    {
+        "title": "Biomedical Robots and Devices in Healthcare: Opportunities and Challenges for Future Applications",
+        "authors": "Iqbal, F., Gupta, P., Kumar, V., Pratihar, D. K.",
+        "year": "2024",
+        "publisher": "Elsevier Science & Technology",
+        "link": "https://www.sciencedirect.com/book/9780443222061/biomedical-robots-and-devices-in-healthcare",
+        "cover": "mypic/book1.jpg",   # NOTE: path is relative to /static
+    },
+    {
+        "title": "Advancing Healthcare Through Decision Intelligence: Machine Learning, Robotics, and Analytics in Biomedical Informatics",
+        "authors": "Dey, S., Kumar, V., Pratihar, D. K., Singh, V. P., Islam, S. M. N.",
+        "year": "2025",
+        "publisher": "Academic Press (Elsevier)",
+        "link": "https://www.sciencedirect.com/book/9780443264801/advancing-healthcare-through-decision-intelligence",
+        "cover": "mypic/book2.jpg",
+    },
+    {
+        "title": "Quantum Computing, Cyber Security and Cryptography",
+        "authors": "Goyal, S. B., Kumar, V., Islam, S. M. N., Ghai, D.",
+        "year": "2025",
+        "publisher": "Springer",
+        "link": "https://link.springer.com/book/10.1007/978-981-96-4948-8",
+        "cover": "mypic/book3.jpg",
+    },
 ]
+
 SKILLS = {
-    "ML/AI": ["Python", "TensorFlow", "PyTorch", "Scikit‑learn", "Pandas", "NumPy", "SHAP", "XGBoost", "SBLSTM"],
-    "Vision": ["Vision Transformers", "YOLOv8", "RTM Pose", "OpenCV", "Grad‑CAM", "GEI"],
+    "ML/AI": ["Python", "TensorFlow", "PyTorch", "Scikit-learn", "Pandas", "NumPy", "SHAP", "XGBoost", "SBLSTM"],
+    "Vision": ["Vision Transformers", "YOLOv8", "RTM Pose", "OpenCV", "Grad-CAM", "GEI"],
     "Embedded/IoT": ["ESP32", "Raspberry Pi", "Arduino", "IMU", "LiDAR", "FSR", "sEMG"],
     "Engg/Sim": ["MATLAB", "COMSOL", "FEA", "OpenSim", "CAD", "Optimization"],
     "Software": ["LangChain", "Streamlit", "Flask", "Git", "APIs", "DB design"],
@@ -254,9 +259,8 @@ SKILLS = {
 }
 
 # ------------------------------
-# HTML (Jinja‑in‑string)
+# HTML (Jinja-in-string)
 # ------------------------------
-
 CSS = """
 <style>
 :root{--primary:#2c3e50;--accent:#3498db;--light:#ecf0f1;--text:#2c3e50;--muted:#7f8c8d}
@@ -283,6 +287,15 @@ CSS = """
 .table{width:100%;border-collapse:collapse}
 .table th{background:#e7f1fb;color:#12395e;padding:12px;text-align:left}
 .table td{padding:12px;border-bottom:1px solid #eee}
+
+/* Toast */
+.toast-msg{
+  position: fixed; right: 18px; bottom: 18px;
+  background: rgba(30, 60, 114, 0.95);
+  color: #fff; padding: 12px 16px; border-radius: 10px;
+  box-shadow: 0 8px 24px rgba(0,0,0,.2);
+  z-index: 9999; transition: opacity .4s ease;
+}
 </style>
 """
 
@@ -297,6 +310,40 @@ function switchTab(name){
   });
 }
 window.addEventListener('DOMContentLoaded',()=>{switchTab('journals');});
+
+/* --- Toast + Contact form intercept --- */
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  if (!t) return;
+  t.textContent = msg;
+  t.style.display = 'block';
+  t.style.opacity = '1';
+  setTimeout(() => {
+    t.style.opacity = '0';
+    setTimeout(() => { t.style.display = 'none'; t.style.opacity = '1'; }, 400);
+  }, 2000);
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  const f = document.getElementById('contact-form');
+  if (!f) return;
+  f.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const fd = new FormData(f);
+    try {
+      const res = await fetch('/contact', { method: 'POST', body: fd });
+      const j = await res.json().catch(() => ({}));
+      if (res.ok && j && j.success) {
+        showToast('Message sent!');
+        f.reset();
+      } else {
+        showToast(j.error || 'Failed to send. Please try again.');
+      }
+    } catch {
+      showToast('Network error. Please try again.');
+    }
+  });
+});
 </script>
 """
 
@@ -351,7 +398,7 @@ HTML = """
   <div class="container">
     <h2 class="section-title">About</h2>
     <div class="card">
-      <p class="mb-2">Ph.D. scholar specializing in AI‑driven biomechatronic systems, intelligent prosthetics & wearable health technologies. I integrate multimodal sensors, embedded platforms, and ML for real‑time decision support in healthcare.</p>
+      <p class="mb-2">Ph.D. scholar specializing in AI-driven biomechatronic systems, intelligent prosthetics & wearable health technologies. I integrate multimodal sensors, embedded platforms, and ML for real-time decision support in healthcare.</p>
       <div class="row g-3 mt-2">
         <div class="col-md-6"><strong>Email:</strong> {{ BIO.email }}<br><strong>Phone:</strong> {{ BIO.phone }}</div>
         <div class="col-md-6"><strong>Location:</strong> {{ BIO.location }}<br><strong>Open to:</strong> {{ BIO.status }}</div>
@@ -430,7 +477,8 @@ HTML = """
     <div class="grid grid-3">
       {% for b in BOOKS %}
       <div class="card book">
-        <img src="{{ url_for('static', filename=b.cover.replace('static/','')) }}" alt="{{ b.title }} cover" onerror="this.src='https://via.placeholder.com/88x120?text=Cover'">
+        <img src="{{ url_for('static', filename=b.cover) }}" alt="{{ b.title }} cover"
+             onerror="this.src='https://via.placeholder.com/88x120?text=Cover'">
         <div>
           <div class="fw-bold">{{ b.title }}</div>
           <div class="small">{{ b.publisher }} • {{ b.year }}</div>
@@ -494,6 +542,9 @@ HTML = """
   </div>
 </footer>
 
+<!-- Toast container -->
+<div id="toast" class="toast-msg" style="display:none"></div>
+
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 {{ JS|safe }}
 </body>
@@ -503,7 +554,6 @@ HTML = """
 # ------------------------------
 # Routes
 # ------------------------------
-
 @app.route("/")
 def home():
     schema = {
@@ -517,27 +567,27 @@ def home():
         "sameAs": [BIO["scholar_url"], BIO["linkedin"], BIO["rg"]],
     }
     return render_template_string(
-    HTML,
-    CSS=CSS,
-    JS=JS,
-    BIO=BIO,
-    EDUCATION=EDUCATION,
-    EXPERIENCE=EXPERIENCE,
-    PUBLICATIONS=PUBLICATIONS,
-    BOOKS=BOOKS,
-    AWARDS=globals().get("AWARDS", []),
-    MENTORING=globals().get("MENTORING", []),
-    TALKS=globals().get("TALKS", []),
-    PROFILE_IMG_B64=PROFILE_IMG_B64,
-    now=datetime.utcnow(),
-    schema_json=json.dumps(schema),
-)
+        HTML,
+        CSS=CSS,
+        JS=JS,
+        BIO=BIO,
+        EDUCATION=EDUCATION,
+        EXPERIENCE=EXPERIENCE,
+        PUBLICATIONS=PUBLICATIONS,
+        BOOKS=BOOKS,
+        AWARDS=AWARDS,
+        MENTORING=MENTORING,
+        TALKS=TALKS,
+        PROFILE_IMG_B64=PROFILE_IMG_B64,
+        now=datetime.utcnow(),
+        schema_json=json.dumps(schema),
+    )
 
 @app.route("/api/publications")
 def publications_api():
     return jsonify(PUBLICATIONS)
 
-@app.route("/contact", methods=["POST"]) 
+@app.route("/contact", methods=["POST"])
 def contact():
     data = request.form or request.get_json(force=True, silent=True) or {}
     # spam honeypot
@@ -551,8 +601,7 @@ def contact():
         return jsonify({"success": False, "error": "Missing fields"}), 400
     try:
         msg = Message(subject=f"[VK Site] {subject}", recipients=[BIO["email"]])
-        msg.body = f"""
-From: {name} <{email}>
+        msg.body = f"""From: {name} <{email}>
 Subject: {subject}
 
 {message}
@@ -585,6 +634,3 @@ def se(e):
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
     app.run(host="0.0.0.0", port=port, debug=True)
-
-
-
