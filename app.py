@@ -86,16 +86,16 @@ EDUCATION = [
 
 EXPERIENCE = [
     {
-        "role": "Senior Research Fellow — AI‑Enhanced Powered Ankle‑Foot Prosthetic System",
+        "role": "Senior Research Fellow — AI-Enhanced Powered Ankle-Foot Prosthetic System",
         "org": "Indian Institute of Technology Kharagpur",
         "date": "Jul 2021 – Present",
         "bullets": [
             "Embedded IoT & sensor fusion (ESP32, Raspberry Pi); terrain classification via LiDAR + IMU",
-            "Multimodal gait control using 16‑channel FSR insoles, IMUs and Maxon motors",
-            "ML pipelines with SHAP explainability; >90% gait‑phase accuracy",
-            "Vision‑based gait analysis (ViTs, YOLOv8, OpenPose, GEI); 96%+ accuracy on disorders",
+            "Multimodal gait control using 16-channel FSR insoles, IMUs and Maxon motors",
+            "ML pipelines with SHAP explainability; >90% gait-phase accuracy",
+            "Vision-based gait analysis (ViTs, YOLOv8, OpenPose, GEI); 96%+ accuracy on disorders",
             "Material selection + FEA in COMSOL for structural validation",
-            "LLM‑driven clinical decision support (CDS ProsthetiX; LangChain + Streamlit)",
+            "LLM-driven clinical decision support (CDS ProsthetiX; LangChain + Streamlit)",
             "Extensive sensor trials across terrains; reliability under varying loads",
         ],
     },
@@ -104,13 +104,8 @@ EXPERIENCE = [
         "org": "TIH Foundation for IoT & IoE (IIT Bombay) / DST, GoI",
         "date": "Feb 2024 – Present",
         "bullets": [
-            "Mentor DST‑fuAWARDS = [
-    "Karyashala: RAAIBA‑2022 (SERB/DST) — 7‑day high‑end workshop on AI for Biomedical Applications",
-    "Institute Assistantship (MHRD) — PhD Research Scholar, IIT Kharagpur (2021–present)",
-    "GATE Fellowship — Jadavpur University (2016–2018)",
-]
-ead end‑to‑end IoT prosthetic stack: embedded, real‑time acquisition, control, cloud",
-            "Coordinate cross‑functional teams; milestones, budgets, and translational impact",
+            "Mentored DST-funded end-to-end IoT prosthetic stack: embedded systems, real-time acquisition, control, and cloud",
+            "Coordinated cross-functional teams; milestones, budgets, and translational impact",
         ],
     },
     {
@@ -127,15 +122,17 @@ ead end‑to‑end IoT prosthetic stack: embedded, real‑time acquisition, cont
         "org": "Unacademy (EdTech)",
         "date": "Aug 2020 – Dec 2020",
         "bullets": [
-            "Manufacturing, SOM, Thermodynamics, Engg. Maths; problem‑solving & mocks",
+            "Taught Manufacturing, Strength of Materials, Thermodynamics, Engineering Mathematics",
+            "Delivered problem-solving sessions & mock tests for GATE aspirants",
         ],
     },
     {
         "role": "Project Assistant — Design Guidelines for Underground Coal Extraction",
-        "org": "CSIR‑CIMFR",
+        "org": "CSIR-CIMFR",
         "date": "Aug 2018 – Mar 2020",
         "bullets": [
-            "CAD + numerical simulations for deep seams (300m+); geo‑mining data for MATLAB optimization",
+            "Created CAD models + numerical simulations for deep seams (300m+)",
+            "Processed geo-mining data for MATLAB optimization to improve mine safety",
         ],
     },
     {
@@ -143,7 +140,8 @@ ead end‑to‑end IoT prosthetic stack: embedded, real‑time acquisition, cont
         "org": "Jadavpur University",
         "date": "Aug 2016 – Mar 2018",
         "bullets": [
-            "VBASIC expert system recommending NTM parameters; validated with real cases",
+            "Developed VBASIC expert system recommending optimal NTM parameters",
+            "Validated system on multiple real-world case scenarios",
         ],
     },
     {
@@ -151,19 +149,20 @@ ead end‑to‑end IoT prosthetic stack: embedded, real‑time acquisition, cont
         "org": "MAKAUT",
         "date": "Aug 2015 – Mar 2016",
         "bullets": [
-            "Arduino‑based navigation with ultrasonic + PIR sensors in wearable shoe/belt/cap",
+            "Arduino-based navigation system with ultrasonic + PIR sensors",
+            "Integrated into wearable shoe, belt, and cap for obstacle detection",
         ],
     },
 ]
 
 AWARDS = [
-    "Chanakya Fellowship (DST/TIH‑IoT), 2024–present",
+    "Chanakya Fellowship (DST/TIH-IoT), 2024–present",
+    "Karyashala: RAAIBA-2022 (SERB/DST) — 7-day high-end workshop on AI for Biomedical Applications",
+    "Institute Assistantship (MHRD) — PhD Research Scholar, IIT Kharagpur (2021–present)",
+    "GATE Fellowship — Jadavpur University (2016–2018)",
     "Best Paper/Presentation — (add details)",
 ]
 
-MENTORING = [
-    "Srinjoy — Terrain geometry estimation with RPLiDAR + Raspberry Pi for adaptive prosthetic control",
-]
 
 TALKS = [
     {"title": "Vision Transformers for Automated Gait Analysis", "venue": "InCACCT 2024", "link": "https://ieeexplore.ieee.org/document/10551002"},
@@ -592,3 +591,4 @@ def se(e):
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
     app.run(host="0.0.0.0", port=port, debug=True)
+
