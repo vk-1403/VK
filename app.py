@@ -517,21 +517,21 @@ def home():
         "sameAs": [BIO["scholar_url"], BIO["linkedin"], BIO["rg"]],
     }
     return render_template_string(
-        HTML,
-        CSS=CSS,
-        JS=JS,
-        BIO=BIO,
-        EDUCATION=EDUCATION,
-        EXPERIENCE=EXPERIENCE,
-        PUBLICATIONS=PUBLICATIONS,
-        BOOKS=BOOKS,
-        AWARDS=AWARDS,
-        MENTORING=MENTORING,
-        TALKS=TALKS,
-        PROFILE_IMG_B64=PROFILE_IMG_B64,
-        now=datetime.utcnow(),
-        schema_json=json.dumps(schema),
-    )
+    HTML,
+    CSS=CSS,
+    JS=JS,
+    BIO=BIO,
+    EDUCATION=EDUCATION,
+    EXPERIENCE=EXPERIENCE,
+    PUBLICATIONS=PUBLICATIONS,
+    BOOKS=BOOKS,
+    AWARDS=globals().get("AWARDS", []),
+    MENTORING=globals().get("MENTORING", []),
+    TALKS=globals().get("TALKS", []),
+    PROFILE_IMG_B64=PROFILE_IMG_B64,
+    now=datetime.utcnow(),
+    schema_json=json.dumps(schema),
+)
 
 @app.route("/api/publications")
 def publications_api():
@@ -585,5 +585,6 @@ def se(e):
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
     app.run(host="0.0.0.0", port=port, debug=True)
+
 
 
