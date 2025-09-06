@@ -389,7 +389,7 @@ BOOKS = [
         "year": "2024",
         "publisher": "Elsevier Science & Technology",
         "link": "https://www.sciencedirect.com/book/9780443222061/biomedical-robots-and-devices-in-healthcare",
-        "cover": "mypic/book1.png",
+        "cover": "mypic/book1.jpg",
     },
     {
         "title": "Advancing Healthcare Through Decision Intelligence: Machine Learning, Robotics, and Analytics in Biomedical Informatics",
@@ -397,7 +397,7 @@ BOOKS = [
         "year": "2025",
         "publisher": "Academic Press (Elsevier)",
         "link": "https://www.sciencedirect.com/book/9780443264801/advancing-healthcare-through-decision-intelligence",
-        "cover": "mypic/book2.png",
+        "cover": "mypic/book2.jpg",
     },
     {
         "title": "Quantum Computing, Cyber Security and Cryptography",
@@ -405,7 +405,7 @@ BOOKS = [
         "year": "2025",
         "publisher": "Springer",
         "link": "https://link.springer.com/book/10.1007/978-981-96-4948-8",
-        "cover": "mypic/book3.png",
+        "cover": "mypic/book3.jpg",
     },
 ]
 
@@ -884,3 +884,4 @@ def se(e):
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
     app.run(host="0.0.0.0", port=port, debug=True)
+
